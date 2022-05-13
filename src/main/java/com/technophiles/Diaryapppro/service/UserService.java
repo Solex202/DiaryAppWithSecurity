@@ -13,4 +13,5 @@ public interface UserService {
     Diary addDiary(@NotNull Long id, @NotNull Diary diary) throws DiaryApplicationException;
     User findById(Long userId) throws DiaryApplicationException;
     boolean deleteUser(User user);
+    User findUserByEmail(String email);
 }

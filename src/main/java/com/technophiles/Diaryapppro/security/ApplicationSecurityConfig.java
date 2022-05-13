@@ -30,7 +30,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.cors().and().csrf().disable().authorizeHttpRequests(authorize ->{
             try{
-            authorize.antMatchers("/**/users/create/**", "**/**/**/users/login")
+            authorize.antMatchers("/**/users/create/**", "**/**/**/auth/login")
                     .permitAll().anyRequest().authenticated().and()
                     .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint)
                     .and().formLogin()
