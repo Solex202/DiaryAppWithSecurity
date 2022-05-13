@@ -1,9 +1,7 @@
 package com.technophiles.Diaryapppro.models;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -18,6 +16,8 @@ import java.util.Set;
 @Setter
 @Validated
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
