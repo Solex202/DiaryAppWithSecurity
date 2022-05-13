@@ -1,5 +1,6 @@
 package com.technophiles.Diaryapppro.security;
 
+import com.technophiles.Diaryapppro.security.jwt.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.Filter;
 
 @Configuration
 @EnableWebSecurity
@@ -30,16 +34,28 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.cors().and().csrf().disable().authorizeHttpRequests(authorize ->{
             try{
-            authorize.antMatchers("/**/users/create/**", "**/**/**/auth/login")
+            authorize.antMatchers("/**/users/create/**", "/**/**/**/auth/login")
                     .permitAll().anyRequest().authenticated().and()
                     .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint)
                     .and().formLogin()
                     .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+                http.addFilterBefore(exceptionHandlerFilterBean(), JwtAuthenticationFilter.class);
+
+
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
         });
 
+    }
+
+    private ExceptionHandlerFilter exceptionHandlerFilterBean() {
+        return new ExceptionHandlerFilter();
+    }
+
+    private JwtAuthenticationFilter authenticationTokenFilterBean() {
+        return new JwtAuthenticationFilter();
     }
 
     @Bean
@@ -51,4 +67,14 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+    
+//    @Bean
+//    public JwtAuthenticationFilter authenticationFilter(){
+//        return new JwtAuthenticationFilter();
+//    }
+//
+//    @Bean
+//    public ExceptionHandlerFilter exceptionHandlerFilter(){
+//        return new ExceptionHandlerFilter();
+//    }
 }

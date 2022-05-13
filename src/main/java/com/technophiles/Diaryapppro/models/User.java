@@ -30,7 +30,7 @@ public class User {
     private String email;
 
 
-    @Size(min = 6, max = 12)
+//    @Size(min = 6, max = 12)
     private String password;
 
 

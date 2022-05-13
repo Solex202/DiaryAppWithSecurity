@@ -19,20 +19,14 @@ import javax.validation.constraints.NotNull;
 
 public class UserController {
 
-//    public UserController(UserService userService) {
-//        this.userService = userService;
-//    }
-
     private UserService userService;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
 
     public UserController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
-
 
     @GetMapping("/login")
     public String login(){

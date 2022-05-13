@@ -1,11 +1,9 @@
 package com.technophiles.Diaryapppro.security.jwt;
 
-import com.technophiles.Diaryapppro.security.jwt.TokenProvider;
 import com.technophiles.Diaryapppro.service.UserService;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,21 +21,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TokenProviderImpl implements TokenProvider {
 
-
     //TODO move jwt props to configServer
-
-//    @Value("${jwt.token.validity}")
-//    public long TOKEN_VALIDITY;
 
     private final int ACCESS_TOKEN_VALIDITY = 9 * 3_600_000;//9hrs
 
-    @Value("${jwt.signing.key}")
-    private String SIGNING_KEY;
-
-    @Value("${jwt.authorities.key}")
-    private String AUTHORITIES_KEY;
-
     private  static Long TOKEN_VALIDITY_PERIOD = (long)(24 * 10 * 3600);
+
+    private String SIGNING_KEY = System.getenv("SECRET_KEY");
+
+    private String AUTHORITIES_KEY = System.getenv("AUTHORITY_KEY");
+
 
 //    @Autowired
 //    private TokenRepository tokenRepository;
@@ -87,6 +80,7 @@ public class TokenProviderImpl implements TokenProvider {
     public String generateJWTToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
@@ -116,48 +110,4 @@ public class TokenProviderImpl implements TokenProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 
-//    @Override
-//    public String getUsernameFromJWTToken(String token) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Date getExpirationDateFromJWTToken(String token) {
-//        return null;
-//    }
-//
-//    @Override
-//    public <T> T getClaimFromJWTToken(String token, Function<Claims, T> claimsResolver) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Header<?> getHeaderFromJWTToken(String token) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Claims getAllClaimsFromJWTToken(String token) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Boolean isJWTTokenExpired(String token) {
-//        return null;
-//    }
-//
-//    @Override
-//    public String generateJWTToken(Authentication authentication) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Boolean validateJWTToken(String token, UserDetails userDetails) {
-//        return null;
-//    }
-//
-//    @Override
-//    public UsernamePasswordAuthenticationToken getAuthenticationToken(String token, Authentication existingAuth, UserDetails userDetails) {
-//        return null;
-//    }
 }
